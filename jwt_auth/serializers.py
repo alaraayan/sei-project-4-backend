@@ -14,7 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
     # password_confirmation field, too.
     password = serializers.CharField(write_only=True)
     password_confirmation = serializers.CharField(write_only=True)
-    
+    print("🍓made this far")
     # We do this to add our own custom validation. Must be called validate for the serializer
     # to know what to use it for. The second argument, data, is the incoming request object
     def validate(self, data):
@@ -23,7 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
         # we can compare them to make sure they're the same and, if so, validate the password.
         password = data.pop("password")
         password_confirmation = data.pop("password_confirmation")
-        
+        print("🍉made this far")
         # First compare the password and password_confirmation. If not, raise a ValidationError
         # and send back an error message.
         if password != password_confirmation:
@@ -35,7 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
             try:
                 # Run in through the built-in Django validator
                 validation.validate_password(password=password)
-            
+                print("🍇made this far")
             # Rename the ValidationError for clarity as we'll use the ValidationError from Django
             # But we'll also raise a serializers.ValidationError, which would get confusing!
             except ValidationError as err:
@@ -43,7 +43,7 @@ class UserSerializer(serializers.ModelSerializer):
         
         # Attach the hashed password to the data dictionary.
         data["password"] = make_password(password)
-        
+        print("🍑made this far")
         # So, we removed the original password and password_confirmation.
         # Compared and validated the password.
         # Then once that was all OK, hashed the password and added it back to the dictionary
