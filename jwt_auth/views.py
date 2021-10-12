@@ -1,11 +1,12 @@
-from datetime import datetime, date, timedelta
+from datetime import datetime, timedelta
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 
-
+from datetime import datetime, date, timedelta
 from django.contrib.auth import get_user_model
 from django.conf import settings
 
@@ -13,22 +14,20 @@ import jwt
 
 from .serializers import UserSerializer
 from .populated import PopulatedUserSerializer
-
+from sprints.serializers import SprintSerializer
 
 User = get_user_model()
 
 
 class RegisterView(APIView):
     def post(self, request):
+        print(request.data)
         # Run the body of the request through the serializer for serialization and validation
         user_to_create = UserSerializer(data=request.data)
-        print(user_to_create.is_valid())
-        print(request.data)
+
         # Proceed if valid
         if user_to_create.is_valid():
-            print("🍒made this far")
             user_to_create.save()
-            print("🍍made this far")
             return Response({"message": "Registration Successful"}, status=status.HTTP_201_CREATED)
 
         # Send back 422 if not valid
