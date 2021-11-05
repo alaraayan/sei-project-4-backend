@@ -48,8 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'sprints',
     'jwt_auth',
+    'sprints',
 ]
 
 MIDDLEWARE = [
@@ -57,7 +57,6 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -119,8 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# The user model
-AUTH_USER_MODEL = 'jwt_auth.User'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -160,5 +158,8 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ["jwt_auth.authentication.JWTAuthentication"],
 
 }
+
+# The user model
+AUTH_USER_MODEL = 'jwt_auth.User'
 
 django_on_heroku.settings(locals())
