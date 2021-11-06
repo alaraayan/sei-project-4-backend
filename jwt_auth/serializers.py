@@ -27,7 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
         # First compare the password and password_confirmation. If not, raise a ValidationError
         # and send back an error message.
         if password != password_confirmation:
-            raise serializers.ValidationError({'password_confirmation': 'Passwords do not match'})
+            raise ValidationError({'password_confirmation': 'Passwords do not match'})
         
         #! This is where we can use the password validator from Django. We use a try/except.
         #? `if not settings.DEBUG` means we don't validate in development but we do in production
@@ -41,7 +41,7 @@ class UserSerializer(serializers.ModelSerializer):
             # But we'll also raise a serializers.ValidationError, which would get confusing!
             except ValidationError as err:
                 print('serializers_I AM INSIDE THE DEBUG THING AND except, this is erroring')
-                raise serializers.ValidationError({'password': err.messages})
+                raise ValidationError({'password': err.messages})
         
         # Attach the hashed password to the data dictionary.
         attrs['password'] = make_password(password)
