@@ -1,6 +1,5 @@
 from django.conf import settings
-from django.contrib.auth import get_user_model
-import django.contrib.auth.password_validation as validation
+from django.contrib.auth import get_user_model, password_validation
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import make_password
 
@@ -32,17 +31,17 @@ class UserSerializer(serializers.ModelSerializer):
         
         #! This is where we can use the password validator from Django. We use a try/except.
         #? `if not settings.DEBUG` means we don't validate in development but we do in production
-        # if not settings.DEBUG:
-        #     try:
-        #         print('serializers_I AM INSIDE THE DEBUG THING AND TRYING')
-        #         # Run in through the built-in Django validator
-        #         validation.validate_password(password=password)
+        if not settings.DEBUG:
+            try:
+                print('serializers_I AM INSIDE THE DEBUG THING AND TRYING')
+                # Run in through the built-in Django validator
+                password_validation.validate_password(password=password)
             
-        #     # Rename the ValidationError for clarity as we'll use the ValidationError from Django
-        #     # But we'll also raise a serializers.ValidationError, which would get confusing!
-        #     except ValidationError as err:
-        #         print('serializers_I AM INSIDE THE DEBUG THING AND except, this is erroring')
-        #         raise serializers.ValidationError({'password': err.messages})
+            # Rename the ValidationError for clarity as we'll use the ValidationError from Django
+            # But we'll also raise a serializers.ValidationError, which would get confusing!
+            except ValidationError as err:
+                print('serializers_I AM INSIDE THE DEBUG THING AND except, this is erroring')
+                raise serializers.ValidationError({'password': err.messages})
         
         # Attach the hashed password to the data dictionary.
         attrs['password'] = make_password(password)
