@@ -1,4 +1,4 @@
-from django.conf import settings
+# from django.conf import settings
 from django.contrib.auth import get_user_model, password_validation
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import make_password
@@ -6,15 +6,12 @@ from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 
 User = get_user_model()
-print('🍅serializers_User model', User)
 class UserSerializer(serializers.ModelSerializer):
     # Comparable to a virtual field in Mongoose. Password will only ever be acknowledge in
     # WRITE requests, so it will never include it in READ requests. We do this for the
     # password_confirmation field, too.
-    print('🍉serializer I AM INSIDE THE USER SERIALIZER')
     password = serializers.CharField(write_only=True)
     password_confirmation = serializers.CharField(write_only=True)
-    print('🍐serializers_password is confirmed', password, '🍌here is the confirmation', password_confirmation)
     # We do this to add our own custom validation. Must be called validate for the serializer
     # to know what to use it for. The second argument, data, is the incoming request object
     def validate(self, attrs):
@@ -32,13 +29,11 @@ class UserSerializer(serializers.ModelSerializer):
         #! This is where we can use the password validator from Django. We use a try/except.
         #? `if not settings.DEBUG` means we don't validate in development but we do in production
         
-        try:
-            print('serializers_I AM INSIDE THE DEBUG THING AND TRYING')
-            # Run in through the built-in Django validator
-            password_validation.validate_password(password=password)
-        except ValidationError as err:
-            print('serializers_I AM INSIDE THE DEBUG THING AND except, this is erroring')
-            raise ValidationError({'password': err.messages})
+        # try:
+        #     # Run in through the built-in Django validator
+        #     password_validation.validate_password(password=password)
+        # except ValidationError as err:
+        #     raise ValidationError({'password': err.messages})
         
         # Attach the hashed password to the data dictionary.
         attrs['password'] = make_password(password)
@@ -47,7 +42,6 @@ class UserSerializer(serializers.ModelSerializer):
         # Compared and validated the password.
         # Then once that was all OK, hashed the password and added it back to the dictionary
         # So we can store it in the database
-        print('🥥serializers_attrs her neyse o', attrs)
         return attrs
     
     class Meta:
